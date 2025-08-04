@@ -11,7 +11,7 @@ Salon Booking System is a microservices-based application designed to facilitate
 - **💈 Salon Service:** Manage salons, services, and offerings.
 - **📅 Booking Service:** Customers can book appointments with salon owners.
 - **👤 User Service:** Handles user registration, profiles, and authentication.
-- 🔑 Keycloak: Centralized identity and access management for secure authentication and authorization.
+- **🔑 Keycloak:** Centralized identity and access management for secure authentication and authorization.
 - **🔍 Eureka Server:** Centralized service discovery for microservices.
 - **🚪 API Gateway:** Single entry point with request routing and cross-cutting concerns.
 - **🔐 OAuth2 Resource Server:** Secures services with JWT-based authentication.
