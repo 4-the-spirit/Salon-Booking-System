@@ -94,11 +94,19 @@ Salon Booking System is a microservices-based application designed to facilitate
    * Click **Modify Options > Environment Variables**.
    * Set your PostgreSQL credentials, for example:
 
-     ```
+     ```env
      POSTGRES_USER=postgres;POSTGRES_PASSWORD=your_password
      ```
+   * **Configure the Payment Service environment variables:** Update the run configuration for the Payment Service by setting the following environment variables. Be sure to replace `your_stripe_secret_key` with your actual Stripe secret key:
+     ```env
+      POSTGRES_USER=postgres
+      POSTGRES_PASSWORD=2003
+      STRIPE_SECRET_KEY=your_stripe_secret_key
+      ```
    * Save the changes.
 
-9. **Start the Eureka Server first** and wait until it’s fully up and running.
 
-10. **Run the remaining microservices**.
+
+11. **Start the Eureka Server first** and wait until it’s fully up and running.
+
+12. **Run the remaining microservices**.
