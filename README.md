@@ -73,7 +73,7 @@ Salon Booking System is a microservices-based application designed to facilitate
    CREATE DATABASE "CategoryServiceDB";
    CREATE DATABASE "PaymentServiceDB";
    CREATE DATABASE "SalonServiceDB";
-   CREATE DATABASE "ServiceOfferingDB";
+   CREATE DATABASE "ServiceOfferingServiceDB";
    CREATE DATABASE "UserServiceDB";
    ```
 
