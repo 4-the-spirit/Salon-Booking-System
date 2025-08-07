@@ -47,7 +47,7 @@ Salon Booking System is a microservices-based application designed to facilitate
 
 2. **Create a `.env` file** in this directory to store your environment-specific variables, such as database credentials. For example:
 
-   ```
+   ```env
    POSTGRES_USER=postgres
    POSTGRES_PASSWORD=your_password
    ```
@@ -95,14 +95,15 @@ Salon Booking System is a microservices-based application designed to facilitate
    * Set your PostgreSQL credentials, for example:
 
      ```env
-     POSTGRES_USER=postgres;POSTGRES_PASSWORD=your_password
+     POSTGRES_USER=postgres;
+     POSTGRES_PASSWORD=your_password
      ```
    * **Configure the Payment Service environment variables:** Update the run configuration for the Payment Service by setting the following environment variables. Be sure to replace `your_stripe_secret_key` with your actual Stripe secret key:
      ```env
-      POSTGRES_USER=postgres
-      POSTGRES_PASSWORD=your_password
-      STRIPE_SECRET_KEY=your_stripe_secret_key
-      ```
+     POSTGRES_USER=postgres;
+     POSTGRES_PASSWORD=your_password;
+     STRIPE_SECRET_KEY=your_stripe_secret_key 
+     ```
    * Save the changes.
 
 
