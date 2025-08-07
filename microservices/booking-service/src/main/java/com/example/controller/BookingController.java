@@ -1,18 +1,23 @@
 package com.example.controller;
 
 import com.example.domain.BookingStatus;
+import com.example.domain.PaymentMethod;
 import com.example.mapper.BookingMapper;
 import com.example.model.Booking;
 import com.example.payload.dto.*;
+import com.example.payload.response.PaymentLinkResponse;
 import com.example.service.BookingService;
+import com.example.service.client.PaymentFeignClient;
+import com.example.service.client.SalonFeignClient;
+import com.example.service.client.ServiceOfferingFeignClient;
+import com.example.service.client.UserFeignClient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,29 +26,24 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookingController {
     private final BookingService bookingService;
+    private final SalonFeignClient salonFeignClient;
+    private final UserFeignClient userFeignClient;
+    private final ServiceOfferingFeignClient serviceOfferingFeignClient;
+    private final PaymentFeignClient paymentFeignClient;
 
     @PostMapping
-    public ResponseEntity<BookingDto> createBooking(
+    public ResponseEntity<PaymentLinkResponse> createBooking(
             @RequestParam Long salonId,
-            @RequestBody BookingRequestDto bookingRequestDto) {
+            @RequestParam PaymentMethod paymentMethod,
+            @RequestBody BookingRequestDto bookingRequestDto,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken) {
 
-        UserDto userDto = new UserDto();
-        userDto.setId(1L);
+        UserDto userDto = userFeignClient.getUserProfile(jwtToken).getBody();
 
-        SalonDto salonDto = new SalonDto();
-        salonDto.setId(salonId);
-        salonDto.setOpenTime(LocalTime.of(0, 0));
-        salonDto.setCloseTime(LocalTime.of(23, 0));
+        SalonDto salonDto = salonFeignClient.getSalonById(salonId).getBody();
 
-        Set<ServiceOfferingDto> serviceOfferingDtoSet = new HashSet<>();
-
-        ServiceOfferingDto serviceOfferingDto = new ServiceOfferingDto();
-        serviceOfferingDto.setId(1L);
-        serviceOfferingDto.setPrice(399D);
-        serviceOfferingDto.setDuration(45);
-        serviceOfferingDto.setName("Hair cut for men");
-
-        serviceOfferingDtoSet.add(serviceOfferingDto);
+        Set<ServiceOfferingDto> serviceOfferingDtoSet = serviceOfferingFeignClient
+                .getServiceOfferingsByIds(bookingRequestDto.getServiceOfferingIds()).getBody();
 
         Booking createdBooking = bookingService.createBooking(
                 bookingRequestDto,
@@ -51,24 +51,35 @@ public class BookingController {
                 salonDto,
                 serviceOfferingDtoSet);
 
-        return new ResponseEntity<>(BookingMapper.mapToBookingDto(createdBooking), HttpStatus.OK);
+        BookingDto bookingDto = BookingMapper.mapToBookingDto(createdBooking);
+        PaymentLinkResponse paymentLinkResponse = null;
+
+        try {
+            paymentLinkResponse = paymentFeignClient.createPaymentLink(
+                    bookingDto,
+                    paymentMethod,
+                    jwtToken).getBody();
+        } catch (Exception exp) {
+            throw new RuntimeException("Could not create payment link!");
+        }
+        return new ResponseEntity<>(paymentLinkResponse, HttpStatus.OK);
     }
 
     @GetMapping("/customer")
-    public ResponseEntity<Set<BookingDto>> getBookingsByCustomer() {
-        UserDto userDto = new UserDto();
-        userDto.setId(1L);
-
-        Set<Booking> bookingSet = bookingService.getBookingsByCustomer(1L);
+    public ResponseEntity<Set<BookingDto>> getBookingsByCustomer(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
+    ) {
+        UserDto userDto = userFeignClient.getUserProfile(jwtToken).getBody();
+        Set<Booking> bookingSet = bookingService.getBookingsByCustomer(userDto.getId());
         return new ResponseEntity<>(BookingMapper.mapToBookingDtoSet(bookingSet), HttpStatus.OK);
     }
 
     @GetMapping("/salon")
-    public ResponseEntity<Set<BookingDto>> getBookingsBySalon() {
-        UserDto userDto = new UserDto();
-        userDto.setId(1L);
-
-        Set<Booking> bookingSet = bookingService.getBookingsBySalon(1L);
+    public ResponseEntity<Set<BookingDto>> getBookingsBySalon(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
+    ) {
+        SalonDto salonDto = salonFeignClient.getSalonByOwnerAccessToken(jwtToken).getBody();
+        Set<Booking> bookingSet = bookingService.getBookingsBySalon(salonDto.getId());
         return new ResponseEntity<>(BookingMapper.mapToBookingDtoSet(bookingSet), HttpStatus.OK);
     }
 
@@ -76,9 +87,6 @@ public class BookingController {
     public ResponseEntity<BookingDto> getBookingById(
             @PathVariable("bookingId") Long bookingId
     ) {
-        UserDto userDto = new UserDto();
-        userDto.setId(1L);
-
         Booking booking = bookingService.getBookingById(bookingId);
         return new ResponseEntity<>(BookingMapper.mapToBookingDto(booking), HttpStatus.OK);
     }
@@ -114,8 +122,11 @@ public class BookingController {
     }
 
     @GetMapping("/report")
-    public ResponseEntity<SalonReportDto> getSalonReport() {
-        SalonReportDto report = bookingService.getSalonReport(1L);
+    public ResponseEntity<SalonReportDto> getSalonReport(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
+    ) {
+        SalonDto salonDto = salonFeignClient.getSalonByOwnerAccessToken(jwtToken).getBody();
+        SalonReportDto report = bookingService.getSalonReport(salonDto.getId());
         return new ResponseEntity<>(report, HttpStatus.OK);
     }
 

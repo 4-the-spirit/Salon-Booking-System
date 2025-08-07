@@ -33,6 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
         paymentOrder.setPaymentMethod(paymentMethod);
         paymentOrder.setSalonId(bookingDto.getSalonId());
         paymentOrder.setBookingId(bookingDto.getId());
+        paymentOrder.setUserId(bookingDto.getCustomerId());
 
         PaymentOrder savedOrder = paymentOrderRepository.save(paymentOrder);
 

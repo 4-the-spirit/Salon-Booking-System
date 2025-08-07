@@ -17,7 +17,7 @@ server:
 
 stripe:
   api:
-    key: "MY_KEY"
+    key: ${STRIPE_SECRET_KEY}
 
 eureka:
   instance:

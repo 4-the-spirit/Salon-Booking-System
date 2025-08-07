@@ -6,8 +6,10 @@ import com.example.payload.dto.BookingDto;
 import com.example.payload.dto.UserDto;
 import com.example.payload.response.PaymentLinkResponse;
 import com.example.service.PaymentService;
+import com.example.service.client.UserFeignClient;
 import com.stripe.exception.StripeException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,15 +19,16 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PaymentController {
     private final PaymentService paymentService;
+    private final UserFeignClient userFeignClient;
 
     @PostMapping("/create")
     public ResponseEntity<PaymentLinkResponse> createPaymentLink(
             @RequestBody BookingDto booking,
-            @RequestParam PaymentMethod paymentMethod
+            @RequestParam PaymentMethod paymentMethod,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
             ) throws StripeException {
-        UserDto userDto = new UserDto();
-        userDto.setFullName("Dana");
-        userDto.setId(1L);
+
+        UserDto userDto = userFeignClient.getUserProfile(jwtToken).getBody();
 
         PaymentLinkResponse paymentLinkResponse = paymentService.createOrder(
                 userDto,

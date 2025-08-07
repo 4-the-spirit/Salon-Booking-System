@@ -27,8 +27,8 @@ public class SalonServiceOfferingController {
 
         SalonDto salonDto = salonFeignClient.getSalonByOwnerAccessToken(jwtToken).getBody();
         CategoryDto categoryDto = categoryFeignClient.getCategoryByIdAndSalon(
-                serviceOffering.getCategoryId(),
-                salonDto.getId()).getBody();
+                salonDto.getId(),
+                serviceOffering.getCategoryId()).getBody();
 
         ServiceOffering createdServiceOffering = serviceOfferingService.createServiceOffering(salonDto, serviceOffering, categoryDto);
         return new ResponseEntity<>(createdServiceOffering, HttpStatus.OK);
