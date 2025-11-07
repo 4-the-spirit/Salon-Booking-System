@@ -4,7 +4,6 @@ import com.example.exception.UserNotFoundException;
 import com.example.model.User;
 import com.example.payload.dto.KeycloakUserDto;
 import com.example.repository.UserRepository;
-import com.example.service.KeycloakService;
 import com.example.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
     private final KeycloakService keycloakService;
 
     @Override

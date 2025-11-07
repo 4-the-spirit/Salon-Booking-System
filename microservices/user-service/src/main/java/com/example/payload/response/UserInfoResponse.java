@@ -1,11 +1,11 @@
-package com.example.payload.request;
+package com.example.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @NoArgsConstructor
-public class UserInfoRequest {
+public class UserInfoResponse {
     private String sub;
 
     @JsonProperty("given_name")

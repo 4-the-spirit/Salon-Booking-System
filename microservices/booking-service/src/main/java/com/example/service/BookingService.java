@@ -24,4 +24,6 @@ public interface BookingService {
     Set<Booking> getBookingsByDate(LocalDate date, Long salonId);
 
     SalonReportDto getSalonReport(Long salonId);
+
+    Booking markBookingConfirmed(PaymentOrder paymentOrder);
 }

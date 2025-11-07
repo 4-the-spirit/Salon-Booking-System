@@ -2,6 +2,8 @@ package com.example.service.impl;
 
 import com.example.domain.PaymentMethod;
 import com.example.domain.PaymentStatus;
+import com.example.message.BookingEventProducer;
+import com.example.message.NotificationEventProducer;
 import com.example.model.PaymentOrder;
 import com.example.payload.dto.BookingDto;
 import com.example.payload.dto.UserDto;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentOrderRepository paymentOrderRepository;
+    private final BookingEventProducer bookingEventProducer;
+    private final NotificationEventProducer notificationEventProducer;
 
     @Value("${stripe.api.key}")
     private String stripeSecretKey;
@@ -90,6 +94,13 @@ public class PaymentServiceImpl implements PaymentService {
                                         String paymentId,
                                         String paymentLinkId) {
         if (paymentOrder.getStatus().equals(PaymentStatus.PENDING)) {
+            bookingEventProducer.sendBookingUpdateEvent(paymentOrder);
+            notificationEventProducer.sendNotificationCreateEvent(
+                    paymentOrder.getBookingId(),
+                    paymentOrder.getUserId(),
+                    paymentOrder.getSalonId()
+            );
+
             paymentOrder.setStatus(PaymentStatus.SUCCESS);
             paymentOrderRepository.save(paymentOrder);
             return true;

@@ -46,12 +46,8 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<User> getUserProfile(
-            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String jwtToken
     ) {
-        String jwtToken = authHeader.startsWith("Bearer ")
-                ? authHeader.substring(7)
-                : authHeader;
-
         User user = userService.getUserByJwtToken(jwtToken);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }

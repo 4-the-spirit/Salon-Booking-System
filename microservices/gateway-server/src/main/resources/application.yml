@@ -39,11 +39,16 @@ spring:
               predicates:
                 - Path=/auth/**,/api/admin/users/**,/api/users/**,/users/**
 
+            - id: notification-service
+              uri: lb://notification-service
+              predicates:
+                - Path=/api/notifications/**,/api/notifications/salon-owner/**
   security:
     oauth2:
       resource-server:
         jwt:
-          jwk-set-uri: "http://localhost:8080/realms/master/protocol/openid-connect/certs"
+          issuer-uri: http://localhost:8080/realms/master
+          jwk-set-uri: http://localhost:8080/realms/master/protocol/openid-connect/certs
 
 server:
   port: 5000

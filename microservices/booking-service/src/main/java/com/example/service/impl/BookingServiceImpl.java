@@ -139,4 +139,9 @@ public class BookingServiceImpl implements BookingService {
         report.setTotalBookings(bookings.size());
         return report;
     }
+
+    @Override
+    public Booking markBookingConfirmed(PaymentOrder paymentOrder) {
+        return updateBookingStatus(paymentOrder.getBookingId(), BookingStatus.CONFIRMED);
+    }
 }

@@ -25,7 +25,7 @@ public class SalonServiceImpl implements SalonService {
         createdSalon.setEmail(salonDto.getEmail());
         createdSalon.setCity(salonDto.getCity());
         createdSalon.setImages(salonDto.getImages());
-        createdSalon.setOwnerId(salonDto.getOwnerId());
+        createdSalon.setOwnerId(userDto.getId());
         createdSalon.setOpenTime(salonDto.getOpenTime());
         createdSalon.setCloseTime(salonDto.getCloseTime());
         createdSalon.setPhoneNumber(salonDto.getPhoneNumber());

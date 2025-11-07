@@ -7,15 +7,14 @@ import com.example.payload.response.AuthResponse;
 import com.example.payload.response.TokenResponse;
 import com.example.repository.UserRepository;
 import com.example.service.AuthService;
-import com.example.service.KeycloakService;
+import com.example.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private final UserRepository userRepository;
-
+    private final UserService userService;
     private final KeycloakService keycloakService;
 
     @Override
@@ -44,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
         user.setRole(signupDto.getRole());
         user.setFullName(signupDto.getFirstName() + " " + signupDto.getLastName());
 
-        userRepository.save(user);
+        userService.createUser(user);
 
         TokenResponse tokenResponse = keycloakService.getTokenResponse(
                 signupDto.getUsername(),
