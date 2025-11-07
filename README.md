@@ -104,6 +104,13 @@ Salon Booking System is a microservices-based application designed to facilitate
      POSTGRES_PASSWORD=your_password;
      STRIPE_SECRET_KEY=your_stripe_secret_key 
      ```
+   * **Configure the User Service environment variables:** Update the run configuration for the User Service by setting the following environment variables. Be sure to replace the placeholder values with your actual credentials:
+     ```env
+     KEYCLOAK_DB_ID=your_keycloak_db_id
+     KEYCLOAK_ADMIN_USERNAME=your_keycloak_admin_username
+     KEYCLOAK_ADMIN_PASSWORD=your_keycloak_admin_password
+     KEYCLOAK_CLIENT_SECRET=your_keycloak_client_secret
+      ```
    * Save the changes.
 
 
