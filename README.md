@@ -4,6 +4,14 @@
 
 Salon Booking System is a microservices-based application designed to facilitate seamless appointment scheduling for salon customers and efficient management for salon owners. It offers robust service discovery, API gateway routing, and secure OAuth2-based authentication, ensuring scalability, reliability, and security.
 
+## 🧩 General Backend Architecture
+
+![](images/2.png)
+
+## 🔄 Salon Owner & Customer Flows
+
+![](images/3.png)
+
 ## ✨ Features
 
 - **✂️ Salon Service:** Handles CRUD operations for salons, including features for salon owners to manage their salons, and provides endpoints for users to browse and access salon information.
@@ -16,6 +24,8 @@ Salon Booking System is a microservices-based application designed to facilitate
 - **🗄️ PostgreSQL Databases:** Each microservice has its dedicated database for data isolation.
 - **🐳 Docker & Docker Compose:** Simplified local deployment of the full microservices architecture.
 - **🌱 Spring Boot & Spring Cloud:** Robust Java framework supporting microservices development.
+
+
 
 ## 🛠️ Tech Stack
 
